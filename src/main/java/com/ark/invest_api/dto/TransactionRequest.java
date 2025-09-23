@@ -1,14 +1,33 @@
 package com.ark.invest_api.dto;
 
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+@Entity
+@Table(name ="Transaction")
 
 public class TransactionRequest {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private Long fundId;
+
+    @Column(nullable = false)
     private Long investorId;
+
+    @Column(nullable = false)
     private LocalDate date;
+
+    @Column(nullable = false)
     private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TransactionType type;
 
     // getters/setters
@@ -27,4 +46,15 @@ public class TransactionRequest {
     public TransactionType getType() { return type; }
     public void setType(TransactionType type) { this.type = type; }
 
+    @Override
+    public String toString() {
+        return "TransactionRequest{" +
+                "id=" + id +
+                ", fundId=" + fundId +
+                ", investorId=" + investorId +
+                ", date=" + date +
+                ", amount=" + amount +
+                ", type=" + type +
+                '}';
+    }
 }

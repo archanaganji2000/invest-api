@@ -1,6 +1,9 @@
 package com.ark.invest_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,32 +24,37 @@ public class Investor {
     @Column(nullable = false)
     private String lastName;
 
+    @Pattern(
+            regexp = "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            message = "Invalid email: must contain '@' and '.'"
+    )
     @Column(nullable = false, unique = true)
     private String email;
 
-
-    @ManyToMany(mappedBy = "investors")
-    private Set<Fund> funds = new HashSet<>();
-
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Transaction> transactions= new ArrayList<>();
-
-    public Set<Fund> getFunds() {
-        return funds;
-    }
-
-    public void setFunds(Set<Fund> funds) {
-        this.funds = funds;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
+//    @Transient
+//    @ManyToMany(mappedBy = "investors")
+//    private Set<Fund> funds = new HashSet<>();
+//
+//@Transient
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Transaction> transactions= new ArrayList<>();
+//
+//    public Set<Fund> getFunds() {
+//        return funds;
+//    }
+//
+//    public void setFunds(Set<Fund> funds) {
+//        this.funds = funds;
+//    }
+//
+//    public List<Transaction> getTransactions() {
+//        return transactions;
+//    }
+//
+//    public void setTransactions(List<Transaction> transactions) {
+//        this.transactions = transactions;
+//    }
 
     public long getId() {
         return id;
@@ -87,8 +95,6 @@ public class Investor {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", funds=" + funds +
-                ", transactions=" + transactions +
                 '}';
     }
 }

@@ -4,6 +4,7 @@ import com.ark.invest_api.dto.Fund;
 import com.ark.invest_api.service.FundsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +19,9 @@ public class FundsController {
 
     @PostMapping(path = "/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@Validated @RequestBody Fund fund) {
-        fundsService.addfunds(fund);
-
+    public ResponseEntity<Fund> save(@Validated @RequestBody Fund fund) {
+        Fund created = fundsService.addfunds(fund);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/")
@@ -28,8 +29,15 @@ public class FundsController {
         return fundsService.getAllFunds();
     }
 
+
     @GetMapping("/{id}")
-    public Fund get(@PathVariable Long id) { return fundsService.get(id); }
+    public ResponseEntity<Fund> get(@PathVariable Long id) {
+
+            Fund fund = fundsService.get(id);
+            return ResponseEntity.ok(fund);
+
+    }
+
 
     @PatchMapping("/{id}")
     public Fund update(@PathVariable Long id, @RequestBody Fund fund) {
@@ -38,7 +46,9 @@ public class FundsController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {  fundsService.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id)  {
+       fundsService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

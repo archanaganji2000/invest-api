@@ -1,22 +1,17 @@
 package com.ark.invest_api.service;
 
 import com.ark.invest_api.dto.*;
+import com.ark.invest_api.exceptions.NotFoundException;
 import com.ark.invest_api.repository.FundRepository;
 import com.ark.invest_api.repository.InvestorRepository;
 import com.ark.invest_api.repository.TransactionRepository;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TransactionService {
     @Autowired
     private  TransactionRepository txRepo;
@@ -27,36 +22,36 @@ public class TransactionService {
     @Autowired
     private  InvestorRepository investorRepo;
 
-    public List<Transaction> all() { return txRepo.findAll(); }
-    public Transaction get(Long id) { return txRepo.findById(id).orElseThrow(); }
+    public List<TransactionRequest> all() { return txRepo.findAll(); }
+    public TransactionRequest get(Long id) { return txRepo.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found with id " + id)); }
 
-    @Transactional
-    public Transaction create(TransactionRequest req) {
+    public TransactionRequest create(TransactionRequest req) {
         Fund fund = fundRepo.findById(req.getFundId()).orElseThrow(()->new NotFoundException("Fund not found"));
         Investor investor = investorRepo.findById(req.getInvestorId()).orElseThrow(()->new NotFoundException("Investor not found"));
         // ensure fund & investor exist and link
-        Transaction t = new Transaction();
-        t.setFund(fund);
-        t.setInvestor(investor);
-        t.setDate(req.getDate());
-        t.setAmount(req.getAmount());
-        t.setType(req.getType());
+//        Transaction t = new Transaction();
+//        t.setFund(fund);
+//        t.setInvestor(investor);
+//        t.setDate(req.getDate());
+//        t.setAmount(req.getAmount());
+//        t.setType(req.getType());
 
-        fund.getInvestors().add(investor);
-        investor.getFunds().add(fund);
+//        fund.getInvestors().add(investor);
+//        investor.getFunds().add(fund);
+        System.out.println("ASDASDASD-------");
+        return txRepo.save(req);
+    }
+
+
+    public TransactionRequest update(Long id, UpdateRequest patch) {
+        TransactionRequest t = get(id);
+        t.setDate(patch.date());
+        t.setAmount(patch.amount());
+        t.setType(patch.type());
+
         return txRepo.save(t);
     }
 
-    @Transactional
-    public Transaction update(Long id, Transaction patch) {
-        Transaction t = get(id);
-        t.setDate(patch.getDate());
-        t.setAmount(patch.getAmount());
-        t.setType(patch.getType());
-        return t;
-    }
-
-    @Transactional
     public void delete(Long id) { txRepo.deleteById(id); }
 
     public static boolean isCredit(TransactionType type) {
@@ -70,7 +65,7 @@ public class TransactionService {
         return !isCredit(type);
     }
 
-    public static BigDecimal signedAmount(Transaction tx) {
+    public static BigDecimal signedAmount(TransactionRequest tx) {
         return isCredit(tx.getType()) ? tx.getAmount() : tx.getAmount().negate();
     }
 }

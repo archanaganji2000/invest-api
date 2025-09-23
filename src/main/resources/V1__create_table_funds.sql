@@ -1,1 +1,3 @@
---CREATE TABLE funds (id bigint not null auto_increment PRIMARY KEY,name VARCHAR(255) NOT NULL,currency VARCHAR(255) NOT NULL DEFAULT 'USD');
+CREATE TABLE funds (id bigint not null auto_increment PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+currency VARCHAR(255) NOT NULL DEFAULT 'USD');

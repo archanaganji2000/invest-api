@@ -1,13 +1,11 @@
 package com.ark.invest_api.dto;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@Entity
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +16,7 @@ public class Transaction {
 
     @ManyToOne(optional = false)
     private Investor investor;
+
 
     @Column(nullable = false)
     private LocalDate date;

@@ -2,7 +2,9 @@ package com.ark.invest_api.repository;
 
 import com.ark.invest_api.dto.Fund;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,5 +14,9 @@ import java.util.Optional;
 public interface FundRepository extends JpaRepository<Fund, Long>{
     Optional<Fund> findByName(String name);
 
+    @Query("select f.name from Fund f where f.id = :id")
+    Optional<String> findNameById(@Param("id") Long id);
 
+
+    boolean existsByNameIgnoreCase(String name);
 }

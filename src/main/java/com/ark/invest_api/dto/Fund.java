@@ -1,11 +1,14 @@
 package com.ark.invest_api.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Fund {
@@ -17,38 +20,45 @@ public class Fund {
     private String name;
 
     @Column(nullable = false)
-    private String currency = "USD";
+    private String currency;
 
 
-    @ManyToMany
-    @JoinTable(
-            name = "fund_investor",
-            joinColumns = @JoinColumn(name = "fund_id"),
-            inverseJoinColumns = @JoinColumn(name = "investor_id")
-    )
-    private Set<Investor> investors = new HashSet<>();
+//    @ManyToMany
+//@Transient
+//    @JoinTable(
+//            name = "fund_investor",
+//            joinColumns = @JoinColumn(name = "fund_id"),
+//            inverseJoinColumns = @JoinColumn(name = "investor_id")
+//    )
+//    private Set<Investor> investors = new HashSet<>();
+//
+//    @JsonProperty("investorIds")
+//    public Set<Long> getInvestorIds() {
+//        return investors.stream()
+//                .map(Investor::getId)
+//                .collect(Collectors.toSet());
+//    }
 
+//   @Transient
+//
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Transaction> transactions= new ArrayList<>();
+//
+//    public Set<Investor> getInvestors() {
+//        return investors;
+//    }
+//
+//    public void setInvestors(Set<Investor> investors) {
+//        this.investors = investors;
+//    }
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Transaction> transactions= new ArrayList<>();
-
-    public Set<Investor> getInvestors() {
-        System.out.println(investors);
-        return investors;
-    }
-
-    public void setInvestors(Set<Investor> investors) {
-        System.out.println(investors+"------");
-        this.investors = investors;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
+//    public List<Transaction> getTransactions() {
+//        return transactions;
+//    }
+//
+//    public void setTransactions(List<Transaction> transactions) {
+//        this.transactions = transactions;
+//    }
 
     public String getName() {
         return name;
@@ -80,8 +90,6 @@ public class Fund {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", currency='" + currency + '\'' +
-                ", investors=" + investors +
-                ", transactions=" + transactions +
                 '}';
     }
 }
