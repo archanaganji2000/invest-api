@@ -1,14 +1,12 @@
 package com.ark.invest_api.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
@@ -30,31 +28,6 @@ public class Investor {
     )
     @Column(nullable = false, unique = true)
     private String email;
-
-//    @Transient
-//    @ManyToMany(mappedBy = "investors")
-//    private Set<Fund> funds = new HashSet<>();
-//
-//@Transient
-//
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Transaction> transactions= new ArrayList<>();
-//
-//    public Set<Fund> getFunds() {
-//        return funds;
-//    }
-//
-//    public void setFunds(Set<Fund> funds) {
-//        this.funds = funds;
-//    }
-//
-//    public List<Transaction> getTransactions() {
-//        return transactions;
-//    }
-//
-//    public void setTransactions(List<Transaction> transactions) {
-//        this.transactions = transactions;
-//    }
 
     public long getId() {
         return id;

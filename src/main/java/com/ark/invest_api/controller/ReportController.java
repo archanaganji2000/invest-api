@@ -14,8 +14,11 @@ import java.util.UUID;
 @RequestMapping("/api/reports")
 public class ReportController {
 
-    @Autowired
-    private ReportingService reporting;
+    private final ReportingService reporting;
+
+    public ReportController(ReportingService reporting) {
+        this.reporting = reporting;
+    }
 
     @GetMapping("/funds/{fundId}/summary")
     public FundSummary fundSummary(@PathVariable Long fundId) {

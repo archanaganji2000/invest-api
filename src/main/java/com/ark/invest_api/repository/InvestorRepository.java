@@ -10,5 +10,6 @@ import java.util.Optional;
 @EnableJpaRepositories
 @Repository
 public interface InvestorRepository extends JpaRepository<Investor, Long> {
-Optional<Investor> findByEmail(String email);
+    Optional<Investor> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

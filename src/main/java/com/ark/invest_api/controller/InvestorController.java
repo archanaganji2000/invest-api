@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/investors")
@@ -18,34 +20,32 @@ public class InvestorController {
     private InvestorService investorService;
 
     @PostMapping("/save")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Investor> add(@Valid @RequestBody Investor inv) {
+    public ResponseEntity<Map<String, String>> add(@Valid @RequestBody Investor inv) {
         Investor investor = investorService.add(inv);
-        return ResponseEntity.status(HttpStatus.CREATED).body(investor);
+        URI location = URI.create("/api/investors/save/"+ investor.getId());
+        return ResponseEntity.created(location).body(Map.of("message", "Investor added successfully"));
     }
 
-
     @GetMapping("/")
-    public List<Investor> list() { return investorService.all(); }
+    public ResponseEntity<List<Investor>> list() {
+        return ResponseEntity.ok(investorService.all());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Investor>  get(@PathVariable Long id) {
-        Investor investor = investorService.get(id);
-        return ResponseEntity.ok(investor);
+        return ResponseEntity.ok(investorService.get(id));
     }
 
-
-
     @PatchMapping("/{id}")
-    public Investor update(@PathVariable Long id, @RequestBody Investor patch) {
-        return investorService.update(id, patch);
+    public ResponseEntity<Investor> update(@PathVariable Long id, @RequestBody Investor patch) {
+        Investor updatedInvestor = investorService.update(id, patch);
+        return ResponseEntity.ok(updatedInvestor);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Map<String, String>> delete(@PathVariable Long id) {
         investorService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(Map.of("message", "Investor deleted successfully"));
     }
 }
 

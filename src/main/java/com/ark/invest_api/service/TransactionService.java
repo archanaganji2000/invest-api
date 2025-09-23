@@ -13,14 +13,17 @@ import java.util.List;
 
 @Service
 public class TransactionService {
-    @Autowired
-    private  TransactionRepository txRepo;
+    private final TransactionRepository txRepo;
 
-    @Autowired
-    private  FundRepository fundRepo;
+    private final FundRepository fundRepo;
 
-    @Autowired
-    private  InvestorRepository investorRepo;
+    private final InvestorRepository investorRepo;
+
+    public TransactionService(FundRepository fundRepo, InvestorRepository investorRepo, TransactionRepository txRepo) {
+        this.fundRepo = fundRepo;
+        this.investorRepo = investorRepo;
+        this.txRepo = txRepo;
+    }
 
     public List<TransactionRequest> all() { return txRepo.findAll(); }
     public TransactionRequest get(Long id) { return txRepo.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found with id " + id)); }
@@ -28,17 +31,6 @@ public class TransactionService {
     public TransactionRequest create(TransactionRequest req) {
         Fund fund = fundRepo.findById(req.getFundId()).orElseThrow(()->new NotFoundException("Fund not found"));
         Investor investor = investorRepo.findById(req.getInvestorId()).orElseThrow(()->new NotFoundException("Investor not found"));
-        // ensure fund & investor exist and link
-//        Transaction t = new Transaction();
-//        t.setFund(fund);
-//        t.setInvestor(investor);
-//        t.setDate(req.getDate());
-//        t.setAmount(req.getAmount());
-//        t.setType(req.getType());
-
-//        fund.getInvestors().add(investor);
-//        investor.getFunds().add(fund);
-        System.out.println("ASDASDASD-------");
         return txRepo.save(req);
     }
 

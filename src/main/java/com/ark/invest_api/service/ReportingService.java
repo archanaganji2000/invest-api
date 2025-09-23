@@ -17,14 +17,17 @@ import java.util.stream.Collectors;
 @Service
 public class ReportingService {
 
-    @Autowired
-    private FundRepository fundRepo;
+    private final FundRepository fundRepo;
 
-    @Autowired
-    private TransactionRepository txRepo;
+    private final TransactionRepository txRepo;
 
-    @Autowired
-    private InvestorRepository investorRepo;
+    private final InvestorRepository investorRepo;
+
+    public ReportingService(FundRepository fundRepo, TransactionRepository txRepo, InvestorRepository investorRepo) {
+        this.fundRepo = fundRepo;
+        this.txRepo = txRepo;
+        this.investorRepo = investorRepo;
+    }
 
     public FundSummary fundSummary(Long fundId) {
         Fund f = fundRepo.findById(fundId).orElseThrow();
@@ -57,12 +60,10 @@ public class ReportingService {
         Investor inv = investorRepo.findById(investorId).orElseThrow();
         List<TransactionRequest> txs = txRepo.findByInvestorId(investorId);
 
-        Map<Long, List<TransactionRequest>> byFund = txs.stream().collect(Collectors.groupingBy(t -> t.getFundId()));
+        Map<Long, List<TransactionRequest>> byFund = txs.stream().collect(Collectors.groupingBy(TransactionRequest::getFundId));
         Map<Long, InvestorFundHolding> holdings = new LinkedHashMap<>();
         for (var entry : byFund.entrySet()) {
             Long fundId = entry.getKey();
-
-
 
             List<TransactionRequest> list = entry.getValue();
 

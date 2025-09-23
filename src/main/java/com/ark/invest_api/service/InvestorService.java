@@ -14,38 +14,42 @@ import java.util.List;
 @Service
 public class InvestorService {
 
+    private final InvestorRepository repository;
 
-    @Autowired
-    private InvestorRepository repository;
+    private final TransactionRepository transactionRepository;
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    public InvestorService(InvestorRepository repository, TransactionRepository transactionRepository) {
+        this.repository = repository;
+        this.transactionRepository = transactionRepository;
+    }
 
     public Investor add(Investor investor) {
-        if(investor.getEmail() == null){
+        if(repository.existsByEmail(investor.getEmail())){
+            throw new ConflictException("Investor with email '" + investor.getEmail() + "' already exists.");
+        }
+        if(investor.getEmail() == null)
             throw new InvalidArgumentException("Email is required");
-        }
         if(investor.getFirstName() == null && investor.getLastName()==null)
-        {
             throw new InvalidArgumentException("Name is required");
-        }
         return repository.save(investor);
     }
 
     public List<Investor> all() {
-
         return repository.findAll();
     }
-
 
     public Investor get(Long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Investor not found with id " + id));
     }
 
     public Investor update(Long id, Investor investor) {
-        // 1. Load the existing  by ID
-        Investor i = repository.findById(investor.getId()).orElseThrow(() -> new NotFoundException("investor not found: " + id));
-
+        Investor i = repository.findById(id).orElseThrow(() -> new NotFoundException("investor not found: " + id));
+        if(investor.getEmail() == null && investor.getFirstName() == null && investor.getLastName() == null) {
+            throw new InvalidArgumentException("At least one field (email, firstName, lastName) must be provided for update");
+        }
+        if(repository.existsByEmail(investor.getEmail()) && investor.getFirstName() == null && investor.getLastName() == null){
+            throw new ConflictException("Investor with email '" + investor.getEmail() + "' already exists.");
+        }
         if (investor.getEmail() != null) {
             i.setEmail(investor.getEmail());
         }
@@ -65,9 +69,8 @@ public class InvestorService {
             throw new NotFoundException("investor not found: " + id);
         }
         if (transactionRepository.existsByInvestorId(id)) {
-            // block delete and tell the caller what to do
             throw new ConflictException("Cannot delete: investor has transactions. Close/Archive the investor instead.");
         }
-        repository.deleteById(id); // allowed only when no txns
+        repository.deleteById(id);
     }
 }
