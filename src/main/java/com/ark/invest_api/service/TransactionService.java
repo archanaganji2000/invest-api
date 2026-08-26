@@ -5,7 +5,6 @@ import com.ark.invest_api.exceptions.NotFoundException;
 import com.ark.invest_api.repository.FundRepository;
 import com.ark.invest_api.repository.InvestorRepository;
 import com.ark.invest_api.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

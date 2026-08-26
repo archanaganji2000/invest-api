@@ -1,11 +1,10 @@
 package com.ark.invest_api.controller;
 
-import com.ark.invest_api.dto.Fund;
+
 import com.ark.invest_api.dto.Investor;
 import com.ark.invest_api.service.InvestorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

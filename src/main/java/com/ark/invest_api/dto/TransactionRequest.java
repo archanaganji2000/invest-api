@@ -2,8 +2,7 @@ package com.ark.invest_api.dto;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

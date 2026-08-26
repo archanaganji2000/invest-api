@@ -2,14 +2,8 @@ package com.ark.invest_api.dto;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "fund")

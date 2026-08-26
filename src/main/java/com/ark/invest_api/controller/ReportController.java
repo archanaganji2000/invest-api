@@ -4,10 +4,9 @@ package com.ark.invest_api.controller;
 import com.ark.invest_api.dto.FundSummary;
 import com.ark.invest_api.dto.InvestorSummary;
 import com.ark.invest_api.service.ReportingService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 
 @RestController
